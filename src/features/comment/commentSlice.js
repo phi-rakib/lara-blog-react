@@ -24,6 +24,11 @@ const initialState = {
 const commentSlice = createSlice({
   name: "comment",
   initialState,
+  reducers: {
+    commentReset: (state) => {
+      state = initialState;
+    },
+  },
   extraReducers: {
     [fetchComments.pending]: (state, action) => {
       state.loading = true;
@@ -41,8 +46,8 @@ const commentSlice = createSlice({
 
 export const getAllComments = (state) => state.comments.comments;
 
-export const getLoadingStatus = (state) => state.comments.loading
+export const getLoadingStatus = (state) => state.comments.loading;
+
+export const { commentReset } = commentSlice.actions;
 
 export default commentSlice.reducer;
-
-

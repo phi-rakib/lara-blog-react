@@ -1,7 +1,14 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import LoaderComponent from "../shared/LoaderComponent";
+import AddCommentComponent from "./AddCommentComponent";
 import CommentItemComponent from "./CommentItemComponent";
-import { fetchComments, getAllComments, getLoadingStatus } from "./commentSlice";
+import {
+  fetchComments,
+  getAllComments,
+  getLoadingStatus,
+  commentReset,
+} from "./commentSlice";
 
 function CommentListComponent({ id }) {
   const comments = useSelector(getAllComments);
@@ -11,6 +18,10 @@ function CommentListComponent({ id }) {
 
   useEffect(() => {
     dispatch(fetchComments(id));
+
+    return () => {
+      dispatch(commentReset());
+    };
   }, [dispatch, id]);
 
   let content = comments.map((comment) => (
@@ -18,20 +29,10 @@ function CommentListComponent({ id }) {
   ));
 
   return (
-    <div className="ui comments">
-      {loading ? (
-        <div className="ui active centered inline loader"></div>
-      ) : (
-        content
-      )}
-      <form className="ui reply form">
-        <div className="field">
-          <textarea></textarea>
-        </div>
-        <div className="ui primary submit labeled icon button">
-          <i className="icon edit"></i> Add Comment
-        </div>
-      </form>
+    <div className="ui small comments">
+      <h3 className="ui dividing header">Comments</h3>
+      {loading ? <LoaderComponent /> : content}
+      <AddCommentComponent />
     </div>
   );
 }
