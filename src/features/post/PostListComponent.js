@@ -18,7 +18,14 @@ function PostListComponent() {
   let content = posts.map((post) => (
     <PostItemComponent post={post} key={post.id} />
   ));
-  return <>{content}</>;
+  return (
+    <div className="ui middle aligned stackable grid container">
+      <div className="row">
+        <div className="eight wide column">{content}</div>
+        <div className="eight wide right floated column">{content}</div>
+      </div>
+    </div>
+  );
 }
 
 export default PostListComponent;

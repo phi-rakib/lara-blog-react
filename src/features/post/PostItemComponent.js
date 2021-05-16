@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 
 function PostItemComponent({ post }) {
   return (
-    <div className="ui vertical segment">
-      <h1>
+    <>
+      <h3 className="ui header">
         <Link to={`/posts/${post.id}`}>{post.title}</Link>
-      </h1>
-      <p>{post.body.substr(0, 20)}...</p>
-    </div>
+      </h3>
+      <p>{post.body}...</p>
+    </>
   );
 }
 
