@@ -1,33 +1,35 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 import CommentListComponent from "../comment/CommentListComponent";
 import TagComponent from "../shared/TagComponent";
-import { fetchPost, postReset } from "./postSlice";
 import SinglePostComponent from "./SinglePostComponent";
 import AuthorShortBioComponent from "./AuthorShortBioComponent";
+import axios from "axios";
 
-function PostPageComponent({
-  match: {
-    params: { id },
-  },
-}) {
-  const dispatch = useDispatch();
+function PostPageComponent({ match }) {
+  const { id } = match.params;
 
-  const selectedPost = useSelector((state) => state.posts.post);
+  const initialState = { title: "", body: "" };
+  const [post, setPost] = useState(initialState);
+
+  const getPost = async (id) => {
+    try {
+      const response = await axios.get(
+        `https://jsonplaceholder.typicode.com/posts/${id}`
+      );
+      setPost(response.data);
+    } catch (error) {
+      throw Error(error);
+    }
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
-
-    dispatch(fetchPost(id));
-
-    return () => {
-      dispatch(postReset());
-    };
-  }, [dispatch, id]);
+    getPost(id);
+  }, [id]);
 
   return (
     <div className="ui text container">
-      <SinglePostComponent post={selectedPost} />
+      <SinglePostComponent post={post} />
       <div className="ui basic segment">
         <TagComponent>HTML</TagComponent>
         <TagComponent>CSS</TagComponent>
