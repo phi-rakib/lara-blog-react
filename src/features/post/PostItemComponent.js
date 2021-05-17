@@ -7,6 +7,9 @@ function PostItemComponent({ post }) {
       <h3 className="ui header">
         <Link to={`/posts/${post.id}`}>{post.title}</Link>
       </h3>
+      <button className="mini ui right floated button">
+        <Link to={`/post/edit/${post.id}`}>Edit</Link>
+      </button>
       <p>{post.body}...</p>
     </>
   );
