@@ -23,8 +23,6 @@ function AddPostComponent() {
         history.push("/");
       } catch (error) {
         console.error("Failed to add post ", error);
-      } finally {
-        setStatus("idle");
       }
     }
   };
@@ -35,10 +33,7 @@ function AddPostComponent() {
   };
 
   const handleOnChange = (event) => {
-    const {
-      target: { name, value },
-    } = event;
-    console.log(name, value);
+    const { name, value } = event.target;
     setPost({ ...post, [name]: value });
   };
 
@@ -57,7 +52,11 @@ function AddPostComponent() {
         </div>
         <div className="field">
           <label>Description</label>
-          <textarea onChange={handleOnChange} value={post.body} name="body"></textarea>
+          <textarea
+            onChange={handleOnChange}
+            value={post.body}
+            name="body"
+          ></textarea>
         </div>
         <ButtonComponent handleButtonSubmit={publishPost} classes="positive">
           Publish
