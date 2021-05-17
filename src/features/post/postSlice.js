@@ -23,6 +23,18 @@ export const fetchPost = createAsyncThunk("post/fetchPost", async (id) => {
   }
 });
 
+export const addNewPost = createAsyncThunk("post/addNewPost", async (post) => {
+  try {
+    const response = await axios.post(
+      "https://jsonplaceholder.typicode.com/posts",
+      post
+    );
+    return response.data;
+  } catch (error) {
+    throw Error(error);
+  }
+});
+
 const initialState = {
   posts: [],
   post: {},
@@ -52,6 +64,9 @@ const postSlice = createSlice({
     },
     [fetchPost.fulfilled]: (state, action) => {
       state.post = action.payload;
+    },
+    [addNewPost.fulfilled]: (state, action) => {
+      state.posts.unshift(action.payload);
     },
   },
 });
