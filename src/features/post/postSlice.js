@@ -12,17 +12,6 @@ export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
   }
 });
 
-export const fetchPost = createAsyncThunk("post/fetchPost", async (id) => {
-  try {
-    const response = await axios.get(
-      `https://jsonplaceholder.typicode.com/posts/${id}`
-    );
-    return response.data;
-  } catch (error) {
-    throw Error(error);
-  }
-});
-
 export const addNewPost = createAsyncThunk("post/addNewPost", async (post) => {
   try {
     const response = await axios.post(
@@ -35,9 +24,20 @@ export const addNewPost = createAsyncThunk("post/addNewPost", async (post) => {
   }
 });
 
+export const updatePost = createAsyncThunk(
+  "post/updatePost",
+  async (post) => {
+    try {
+      await axios.put(`https://jsonplaceholder.typicode.com/posts/${post.id}`, post);
+      return post;
+    } catch (error) {
+      throw Error(error);
+    }
+  }
+);
+
 const initialState = {
   posts: [],
-  post: {},
   status: "idle",
   error: null,
 };
@@ -45,11 +45,6 @@ const initialState = {
 const postSlice = createSlice({
   name: "post",
   initialState,
-  reducers: {
-    postReset: (state) => {
-      state.post = {};
-    },
-  },
   extraReducers: {
     [fetchPosts.pending]: (state) => {
       state.status = "loading";
@@ -62,15 +57,18 @@ const postSlice = createSlice({
       state.status = "failed";
       state.error = action.error.message;
     },
-    [fetchPost.fulfilled]: (state, action) => {
-      state.post = action.payload;
-    },
     [addNewPost.fulfilled]: (state, action) => {
       state.posts.unshift(action.payload);
     },
+    [updatePost.fulfilled]: (state, action) => {
+      const { id, title, body } = action.payload;
+      const existingPost = state.posts.find((post) => post.id === id);
+      if (existingPost) {
+        existingPost.title = title;
+        existingPost.body = body;
+      }
+    },
   },
 });
-
-export const { postReset } = postSlice.actions;
 
 export default postSlice.reducer;
