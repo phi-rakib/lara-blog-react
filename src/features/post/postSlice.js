@@ -24,17 +24,26 @@ export const addNewPost = createAsyncThunk("post/addNewPost", async (post) => {
   }
 });
 
-export const updatePost = createAsyncThunk(
-  "post/updatePost",
-  async (post) => {
-    try {
-      await axios.put(`https://jsonplaceholder.typicode.com/posts/${post.id}`, post);
-      return post;
-    } catch (error) {
-      throw Error(error);
-    }
+export const updatePost = createAsyncThunk("post/updatePost", async (post) => {
+  try {
+    await axios.put(
+      `https://jsonplaceholder.typicode.com/posts/${post.id}`,
+      post
+    );
+    return post;
+  } catch (error) {
+    throw Error(error);
   }
-);
+});
+
+export const deletePost = createAsyncThunk("posts/deletePost", async (id) => {
+  try {
+    await axios.delete(`https://jsonplaceholder.typicode.com/posts/${id}`);
+    return id;
+  } catch (error) {
+    throw Error(error);
+  }
+});
 
 const initialState = {
   posts: [],
@@ -67,6 +76,10 @@ const postSlice = createSlice({
         existingPost.title = title;
         existingPost.body = body;
       }
+    },
+    [deletePost.fulfilled]: (state, action) => {
+      const index = state.posts.findIndex(post => post.id === action.payload);
+      if(index >= 0)  state.posts.splice(index, 1);
     },
   },
 });
