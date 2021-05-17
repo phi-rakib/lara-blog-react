@@ -15,6 +15,21 @@ export const fetchComments = createAsyncThunk(
   }
 );
 
+export const addNewComment = createAsyncThunk(
+  "comment/addNewComment",
+  async (comment) => {
+    try {
+      const response = await axios.post(
+        `https://jsonplaceholder.typicode.com/posts/${comment.postId}/comments`,
+        comment
+      );
+      return response.data;
+    } catch (error) {
+      throw Error(error);
+    }
+  }
+);
+
 const initialState = {
   comments: [],
   error: null,
@@ -41,6 +56,9 @@ const commentSlice = createSlice({
       state.loading = false;
       state.error = action.error.message;
     },
+    [addNewComment.fulfilled]: (state, action) => {
+      state.comments.push(action.payload);
+    }
   },
 });
 
