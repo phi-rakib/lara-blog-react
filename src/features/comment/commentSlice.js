@@ -30,6 +30,33 @@ export const addNewComment = createAsyncThunk(
   }
 );
 
+export const editComment = createAsyncThunk(
+  "comment/editComment",
+  async (comment) => {
+    try {
+      await axios.put(
+        `https://jsonplaceholder.typicode.com/comments/${comment.id}`,
+        comment
+      );
+      return comment;
+    } catch (error) {
+      throw Error(error);
+    }
+  }
+);
+
+export const deleteComment = createAsyncThunk(
+  "comment/deleteComment",
+  async (id) => {
+    try {
+      await axios.delete(`https://jsonplaceholder.typicode.com/comments/${id}`);
+      return id;
+    } catch (error) {
+      throw Error(error);
+    }
+  }
+);
+
 const initialState = {
   comments: [],
   error: null,
@@ -58,7 +85,22 @@ const commentSlice = createSlice({
     },
     [addNewComment.fulfilled]: (state, action) => {
       state.comments.push(action.payload);
-    }
+    },
+    [editComment.fulfilled]: (state, action) => {
+      const { id, body } = action.payload;
+      const existingComment = state.comments.find(
+        (comment) => comment.id === id
+      );
+      if (existingComment) {
+        existingComment.body = body;
+      }
+    },
+    [deleteComment.fulfilled]: (state, action) => {
+      const index = state.comments.findIndex(
+        (comment) => comment.id === action.payload
+      );
+      state.comments.splice(index, 1);
+    },
   },
 });
 
