@@ -4,7 +4,7 @@ import ButtonComponent from "../shared/ButtonComponent";
 import { useDispatch } from "react-redux";
 import { updatePost } from "./postSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
-import axios from "axios";
+import apiClient from "../../services/api";
 
 function EditPostComponent({ match }) {
   const { id } = match.params;
@@ -19,11 +19,9 @@ function EditPostComponent({ match }) {
   const history = useHistory();
 
   const getPost = async (id) => {
-    console.log('get post');  
     try {
-      const { data } = await axios.get(
-        `https://jsonplaceholder.typicode.com/posts/${id}`
-      );
+      const response = await apiClient.get(`/api/posts/${id}`);
+      const { data } = response.data;
       setPost(data);
     } catch (error) {
       throw Error(error);
@@ -31,7 +29,6 @@ function EditPostComponent({ match }) {
   };
 
   useEffect(() => {
-    console.log('use effect')
     getPost(id);
   }, [id]);
 
