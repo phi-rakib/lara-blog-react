@@ -1,14 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import apiClient from "../../services/api";
 
 export const fetchComments = createAsyncThunk(
   "comments/fetchComments",
   async (postId) => {
     try {
-      const response = await axios.get(
-        `https://jsonplaceholder.typicode.com/posts/${postId}/comments`
-      );
-      return response.data;
+      const response = await apiClient.get(`/api/posts/${postId}/comments`);
+      const { data } = response.data;
+    return data;
     } catch (error) {
       throw Error(error);
     }
@@ -19,11 +19,12 @@ export const addNewComment = createAsyncThunk(
   "comment/addNewComment",
   async (comment) => {
     try {
-      const response = await axios.post(
-        `https://jsonplaceholder.typicode.com/posts/${comment.postId}/comments`,
+      const response = await apiClient.post(
+        `/api/posts/${comment.postId}/comments`,
         comment
       );
-      return response.data;
+      const { data } = response.data;
+    return data;
     } catch (error) {
       throw Error(error);
     }
@@ -34,10 +35,7 @@ export const editComment = createAsyncThunk(
   "comment/editComment",
   async (comment) => {
     try {
-      await axios.put(
-        `https://jsonplaceholder.typicode.com/comments/${comment.id}`,
-        comment
-      );
+      await axios.put(`/api/comments/${comment.id}`, comment);
       return comment;
     } catch (error) {
       throw Error(error);
@@ -49,7 +47,7 @@ export const deleteComment = createAsyncThunk(
   "comment/deleteComment",
   async (id) => {
     try {
-      await axios.delete(`https://jsonplaceholder.typicode.com/comments/${id}`);
+      await axios.delete(`/api/comments/${id}`);
       return id;
     } catch (error) {
       throw Error(error);
@@ -82,6 +80,7 @@ const commentSlice = createSlice({
     [fetchComments.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.error.message;
+      state.comments = [];
     },
     [addNewComment.fulfilled]: (state, action) => {
       state.comments.push(action.payload);
