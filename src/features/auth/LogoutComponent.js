@@ -14,7 +14,6 @@ function LogoutComponent() {
   const logoutButton = (
     <button
       className="ui inverted button"
-      activeClassName="active"
       onClick={userLogout}
     >
       Log out
