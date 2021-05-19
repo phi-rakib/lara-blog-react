@@ -1,17 +1,26 @@
+import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PostItemComponent from "./PostItemComponent";
-import { fetchPosts } from "./postSlice";
+import { allPostsStatus, fetchPosts, getAllposts } from "./postSlice";
 
 function PostListComponent() {
-  const posts = useSelector((state) => state.posts.posts);
-  const postStatus = useSelector((state) => state.posts.status);
+  const posts = useSelector(getAllposts);
+  const postStatus = useSelector(allPostsStatus);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (postStatus === "idle") {
-      dispatch(fetchPosts());
+      const getPosts = async () => {
+        try {
+          const result = await dispatch(fetchPosts());
+          unwrapResult(result);
+        } catch (error) {
+          console.error("Failed to fetch posts ", error);
+        }
+      };
+      getPosts();
     }
   }, [dispatch, postStatus]);
 
