@@ -1,6 +1,6 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addNewComment } from "./commentSlice";
 
 function AddCommentComponent() {
@@ -9,6 +9,8 @@ function AddCommentComponent() {
   const [comment, setComment] = useState(initialState);
   const [commmentStatus, setCommentStatus] = useState("idle");
 
+  const postId = useSelector((state) => state.posts.post.data.id)
+
   const dispatch = useDispatch();
 
   const saveComment = async (event) => {
@@ -16,6 +18,7 @@ function AddCommentComponent() {
     if (commmentStatus === "idle") {
       setCommentStatus("pending");
       try {
+        comment.postId = postId;
         const result = await dispatch(addNewComment(comment));
         unwrapResult(result);
       } catch (error) {
