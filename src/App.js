@@ -6,7 +6,8 @@ import AddPostComponent from "./features/post/AddPostComponent";
 import FooterComponent from "./features/shared/FooterComponent";
 import HeaderComponent from "./features/shared/HeaderComponent";
 import LoginComponent from "./features/auth/LoginComponent";
-import EditPostComponent from './features/post/EditPostComponent';
+import EditPostComponent from "./features/post/EditPostComponent";
+import { PrivateRoute } from "./features/shared/PrivateRoute";
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
       <div className="pusher">
         <div className="ui vertical stripe segment">
           <Switch>
-            <Route exact path="/" component={PostListComponent} />
+            <PrivateRoute exact path="/" component={PostListComponent} />
             <Route path="/posts/:id" component={PostPageComponent} />
             <Route path="/post/add" component={AddPostComponent} />
             <Route path="/post/edit/:id" component={EditPostComponent} />
