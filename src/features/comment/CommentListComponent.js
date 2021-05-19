@@ -1,5 +1,7 @@
+import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { postData } from "../post/postSlice";
 import LoaderComponent from "../shared/LoaderComponent";
 import AddCommentComponent from "./AddCommentComponent";
 import CommentItemComponent from "./CommentItemComponent";
@@ -10,14 +12,24 @@ import {
   commentReset,
 } from "./commentSlice";
 
-function CommentListComponent({ id }) {
+function CommentListComponent() {
   const comments = useSelector(getAllComments);
   const loading = useSelector(getLoadingStatus);
+  const id = useSelector(postData).id;
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchComments(id));
+    const getComments = async () => {
+      try {
+        const result = await dispatch(fetchComments(id));
+        unwrapResult(result);
+      } catch (error) {
+        console.error("Failed to load comments ", error);
+      }
+    };
+
+    if(id) getComments();
 
     return () => {
       dispatch(commentReset());
