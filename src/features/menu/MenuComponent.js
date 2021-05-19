@@ -1,7 +1,13 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
+import LogoutComponent from "../auth/LogoutComponent";
+import { isLoggedIn } from "./../auth/authSlice";
 
 function MenuComponent() {
+  
+  const loginStatus = useSelector(isLoggedIn);
+
   return (
     <div className="ui container">
       <div className="ui large secondary inverted pointing menu">
@@ -11,20 +17,21 @@ function MenuComponent() {
         <NavLink to="/post/add" className="item" activeClassName="active">
           Add Post
         </NavLink>
-        <NavLink to="/post/edit" className="item" activeClassName="active">
-          Company
-        </NavLink>
         <NavLink to="/post/delete" className="item" activeClassName="active">
           Careers
         </NavLink>
         <div className="right item">
-          <NavLink
-            to="/login"
-            className="ui inverted button"
-            activeClassName="active"
-          >
-            Log in
-          </NavLink>
+          <LogoutComponent />
+          {loginStatus ? null : (
+            <NavLink
+              to="/login"
+              className="ui inverted button"
+              activeClassName="active"
+            >
+              Log in
+            </NavLink>
+          )}
+
           <NavLink
             to="/register"
             className="ui inverted button"
