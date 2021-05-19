@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import HugeHeaderComponent from "../shared/HugeHeaderComponent";
-import { deletePost } from "./postSlice";
-import { useDispatch } from "react-redux";
+import { deletePost, postData } from "./postSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { unwrapResult } from "@reduxjs/toolkit";
 import LoaderComponent from "./../shared/LoaderComponent";
 import { Link } from "react-router-dom";
 
-function SinglePostComponent({ post }) {
+function SinglePostComponent() {
+  const post = useSelector(postData);
+
   const dispatch = useDispatch();
+  
   const history = useHistory();
 
   const [deleteStatus, setDeleteStatus] = useState("idle");
