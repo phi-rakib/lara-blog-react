@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: "http://localhost/lara-blog/public",
+  baseURL: "http://localhost/lara-blog/public/api",
 });
 
 const requestHandler = (request) => {

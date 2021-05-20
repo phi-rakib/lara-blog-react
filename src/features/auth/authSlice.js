@@ -18,7 +18,7 @@ export const login = createAsyncThunk("auth/login", async (user) => {
 
 export const login = createAsyncThunk("auth/login", async (user) => {
   try {
-    const response = await apiClient.post("/api/login", user);
+    const response = await apiClient.post("/login", user);
     localStorage.setItem("user", JSON.stringify(response.data));
     return response.data;
   } catch (error) {

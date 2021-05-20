@@ -3,7 +3,7 @@ import apiClient from "../../services/api";
 
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
   try {
-    const response = await apiClient.get("/api/posts");
+    const response = await apiClient.get("/posts");
     const { data } = response.data;
     return data;
   } catch (error) {
@@ -13,7 +13,7 @@ export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
 
 export const fetchPost = createAsyncThunk("post/fetchPost", async (id) => {
   try {
-    const response = await apiClient.get(`/api/posts/${id}`);
+    const response = await apiClient.get(`/posts/${id}`);
     const { data } = response.data;
     return data;
   } catch (error) {
@@ -23,7 +23,7 @@ export const fetchPost = createAsyncThunk("post/fetchPost", async (id) => {
 
 export const addNewPost = createAsyncThunk("post/addNewPost", async (post) => {
   try {
-    const response = await apiClient.post("/api/posts", post);
+    const response = await apiClient.post("/posts", post);
     const { data } = response.data;
     return data;
   } catch (error) {
@@ -33,7 +33,7 @@ export const addNewPost = createAsyncThunk("post/addNewPost", async (post) => {
 
 export const updatePost = createAsyncThunk("post/updatePost", async (post) => {
   try {
-    await apiClient.put(`/api/posts/${post.id}`, post);
+    await apiClient.put(`/posts/${post.id}`, post);
     return post;
   } catch (error) {
     throw Error(error);
@@ -42,7 +42,7 @@ export const updatePost = createAsyncThunk("post/updatePost", async (post) => {
 
 export const deletePost = createAsyncThunk("posts/deletePost", async (id) => {
   try {
-    await apiClient.delete(`/api/posts/${id}`);
+    await apiClient.delete(`/posts/${id}`);
     return id;
   } catch (error) {
     throw Error(error);
