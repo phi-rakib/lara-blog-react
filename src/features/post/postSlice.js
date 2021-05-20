@@ -57,6 +57,7 @@ const initialState = {
     error: null,
     updateStatus: "idle",
     addStatus: "idle",
+    deleteStatus: "idle",
   },
   status: "idle",
   error: null,
@@ -72,6 +73,7 @@ const postSlice = createSlice({
       state.post.error = null;
       state.post.updateStatus = "idle";
       state.post.addStatus = "idle";
+      state.post.deleteStatus = "idle";
     },
   },
   extraReducers: {
@@ -123,8 +125,15 @@ const postSlice = createSlice({
       }
     },
     [deletePost.fulfilled]: (state, action) => {
+      state.post.deleteStatus = "succeeded";
       const index = state.posts.findIndex((post) => post.id === action.payload);
       if (index >= 0) state.posts.splice(index, 1);
+    },
+    [deletePost.pending]: (state, action) => {
+      state.post.deleteStatus = "pending";
+    },
+    [deletePost.rejected]: (state, action) => {
+      state.post.deleteStatus = "failed";
     },
   },
 });
@@ -132,6 +141,7 @@ const postSlice = createSlice({
 export const postStatus = (state) => state.posts.post.status;
 export const postUpdateStatus = (state) => state.posts.post.updateStatus;
 export const postAddStatus = (state) => state.posts.post.addStatus;
+export const postDeleteStatus = (state) => state.posts.post.deleteStatus;
 export const postData = (state) => state.posts.post.data;
 
 export const getAllposts = (state) => state.posts.posts;

@@ -1,24 +1,23 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { deletePost } from "./postSlice";
-import { unwrapResult } from '@reduxjs/toolkit';
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { deletePost, postDeleteStatus, postReset } from "./postSlice";
+import { unwrapResult } from "@reduxjs/toolkit";
 import { useHistory } from "react-router";
 
-function DeletePostComponent({id}) {
-  const [deleteStatus, setDeleteStatus] = useState("idle");
+function DeletePostComponent({ id }) {
+  const deleteStatus = useSelector(postDeleteStatus);
   const dispatch = useDispatch();
 
   const history = useHistory();
 
   const removePost = async (id) => {
-    if (deleteStatus === "idle") {
-      setDeleteStatus("pending");
+    if (deleteStatus === "idle" || deleteStatus === "failed") {
       try {
         const result = await dispatch(deletePost(id));
         unwrapResult(result);
+        dispatch(postReset());
         history.push("/");
       } catch (error) {
-        setDeleteStatus("idle");
         console.error("Failed to delete post ", error);
       }
     }
