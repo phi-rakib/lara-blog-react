@@ -43,18 +43,13 @@ const initialState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    logout: (state) => {
-      state.loggedIn = false;
-    },
-  },
   extraReducers: {
     [login.fulfilled]: (state, action) => {
       state.user = action.payload.data;
       state.loggedIn = true;
       state.token = action.payload.token;
     },
-    [logout.fulfilled]: (state, action) => {
+    [logout.fulfilled]: (state) => {
       state.user = {};
       state.loggedIn = false;
       state.token = null;
@@ -64,7 +59,7 @@ const authSlice = createSlice({
 
 export const isLoggedIn = (state) => state.auth.loggedIn;
 
-export const authToken = (state) => state.auth?.token;
+export const authToken = (state) => state.auth.token;
 
 export const authUser = (state) => state.auth.user;
 
