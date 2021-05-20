@@ -1,22 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import ButtonComponent from "../shared/ButtonComponent";
-import { useDispatch } from "react-redux";
-import { addNewPost } from "./postSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addNewPost, postAddStatus, postReset } from "./postSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 
 function AddPostComponent() {
   const [post, setPost] = useState({ title: "", body: "" });
-  const [requestStatus, setStatus] = useState("idle");
+  const addStatus = useSelector(postAddStatus);
 
   const dispatch = useDispatch();
 
   const history = useHistory();
 
+  useEffect(() => {
+    return () => {
+      dispatch(postReset());
+    };
+  }, [dispatch]);
+
   const publishPost = async (event) => {
     event.preventDefault();
-    if (requestStatus === "idle") {
-      setStatus("pending");
+    if (addStatus === "idle" || addStatus === "failed") {
       try {
         const result = await dispatch(addNewPost(post));
         unwrapResult(result);
