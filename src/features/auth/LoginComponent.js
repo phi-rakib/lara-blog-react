@@ -5,36 +5,31 @@ import { useHistory } from "react-router";
 import { isLoggedIn, login } from "./authSlice";
 
 function LoginComponent() {
-  const [user, setUser] = useState({ email: "", password: "" });
-  const [loginStatus, setLoginStatus] = useState("idle");
-  const loggedIn = useSelector(isLoggedIn);
+  const [credential, setCredential] = useState({ email: "", password: "" });
+  const loginStatus = useSelector(isLoggedIn);
 
   const dispatch = useDispatch();
 
   const history = useHistory();
 
   useEffect(() => {
-    if (localStorage.getItem("user")) history.push("/");
-  }, [history, loggedIn]);
+    if (loginStatus) history.push("/");
+  }, [history, loginStatus]);
 
   const handleLogin = () => {
-    if (loginStatus === "idle") {
-      setLoginStatus("pending");
+    if (!loginStatus) {
       try {
-        const result = dispatch(login(user));
+        const result = dispatch(login(credential));
         unwrapResult(result);
-        setLoginStatus("idle");
-        history.push("/");
       } catch (error) {
         console.error("Failed to login ", error);
-        setLoginStatus("idle");
       }
     }
   };
 
   const handleOnChange = (event) => {
     const { name, value } = event.target;
-    setUser({ ...user, [name]: value });
+    setCredential({ ...credential, [name]: value });
   };
 
   return (
@@ -52,7 +47,7 @@ function LoginComponent() {
                   type="text"
                   name="email"
                   placeholder="E-mail address"
-                  value={user.email}
+                  value={credential.email}
                   onChange={handleOnChange}
                 />
               </div>
@@ -64,7 +59,7 @@ function LoginComponent() {
                   type="password"
                   name="password"
                   placeholder="Password"
-                  value={user.password}
+                  value={credential.password}
                   onChange={handleOnChange}
                 />
               </div>
