@@ -36,7 +36,7 @@ export const logout = createAsyncThunk("auth/logout", async () => {
 
 const initialState = {
   user: {},
-  loggedIn: false,
+  loggedIn: (localStorage.getItem("user") ?? "").length > 0,
   token: null,
 };
 
