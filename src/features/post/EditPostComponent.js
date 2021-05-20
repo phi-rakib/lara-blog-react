@@ -20,7 +20,7 @@ function EditPostComponent({ match }) {
 
   const getPost = async (id) => {
     try {
-      const response = await apiClient.get(`/api/posts/${id}`);
+      const response = await apiClient.get(`/posts/${id}`);
       const { data } = response.data;
       setPost(data);
     } catch (error) {
