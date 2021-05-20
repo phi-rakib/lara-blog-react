@@ -56,6 +56,7 @@ const initialState = {
     status: "idle",
     error: null,
     updateStatus: "idle",
+    addStatus: "idle",
   },
   status: "idle",
   error: null,
@@ -70,6 +71,7 @@ const postSlice = createSlice({
       state.post.status = "idle";
       state.post.error = null;
       state.post.updateStatus = "idle";
+      state.post.addStatus = "idle";
     },
   },
   extraReducers: {
@@ -84,7 +86,6 @@ const postSlice = createSlice({
       state.status = "idle";
       state.error = action.error.message;
     },
-    //post get by id
     [fetchPost.pending]: (state) => {
       state.post.status = "pending";
     },
@@ -97,7 +98,14 @@ const postSlice = createSlice({
       state.post.error = action.error.message;
     },
     [addNewPost.fulfilled]: (state, action) => {
+      state.post.addStatus = "succeeded";
       state.posts.unshift(action.payload);
+    },
+    [addNewPost.pending]: (state) => {
+      state.post.addStatus = "pending";
+    },
+    [addNewPost.rejected]: (state) => {
+      state.post.addStatus = "failed";
     },
     [updatePost.pending]: (state) => {
       state.post.updateStatus = "pending";
@@ -123,6 +131,7 @@ const postSlice = createSlice({
 
 export const postStatus = (state) => state.posts.post.status;
 export const postUpdateStatus = (state) => state.posts.post.updateStatus;
+export const postAddStatus = (state) => state.posts.post.addStatus;
 export const postData = (state) => state.posts.post.data;
 
 export const getAllposts = (state) => state.posts.posts;
