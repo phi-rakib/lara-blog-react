@@ -16,10 +16,10 @@ function LoginComponent() {
     if (loginStatus) history.push("/");
   }, [history, loginStatus]);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!loginStatus) {
       try {
-        const result = dispatch(login(credential));
+        const result = await dispatch(login(credential));
         unwrapResult(result);
       } catch (error) {
         console.error("Failed to login ", error);
