@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import ButtonComponent from "../shared/ButtonComponent";
 import { useDispatch, useSelector } from "react-redux";
-import { addNewPost, postAddStatus, postReset } from "./postSlice";
+import { addNewPost, postsSelector, resetPostsStatus } from "./postsSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 
 function AddPostComponent() {
   const [post, setPost] = useState({ title: "", body: "" });
-  const addStatus = useSelector(postAddStatus);
+  const { status } = useSelector(postsSelector);
 
   const dispatch = useDispatch();
 
@@ -15,13 +15,13 @@ function AddPostComponent() {
 
   useEffect(() => {
     return () => {
-      dispatch(postReset());
+      dispatch(resetPostsStatus());
     };
   }, [dispatch]);
 
   const publishPost = async (event) => {
     event.preventDefault();
-    if (addStatus === "idle" || addStatus === "failed") {
+    if (status === "idle" || status === "failed") {
       try {
         const result = await dispatch(addNewPost(post));
         unwrapResult(result);

@@ -1,12 +1,12 @@
 import React from "react";
 import HugeHeaderComponent from "../shared/HugeHeaderComponent";
-import { postData } from "./postSlice";
+import { postSelector } from "./postSlice";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import DeletePostComponent from "./DeletePostComponent";
 
 function SinglePostComponent() {
-  const post = useSelector(postData);
+  const { post } = useSelector(postSelector);
 
   return (
     <div className="ui">

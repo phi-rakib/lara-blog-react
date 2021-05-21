@@ -4,16 +4,16 @@ import TagComponent from "../shared/TagComponent";
 import SinglePostComponent from "./SinglePostComponent";
 import AuthorShortBioComponent from "./AuthorShortBioComponent";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPost, postReset, postStatus } from "./postSlice";
+import { fetchPost, postReset, postSelector } from "./postSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import LoaderComponent from "./../shared/LoaderComponent";
 
 function PostPageComponent({ match }) {
-  const { id } = match.params;
-
   const dispatch = useDispatch();
 
-  const status = useSelector(postStatus);
+  const { status } = useSelector(postSelector);
+
+  const { id } = match.params;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -45,7 +45,7 @@ function PostPageComponent({ match }) {
       <div className="ui segment">
         <AuthorShortBioComponent />
       </div>
-      <CommentListComponent id={id} />
+      <CommentListComponent />
     </div>
   );
 }

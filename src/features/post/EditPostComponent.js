@@ -2,23 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import ButtonComponent from "../shared/ButtonComponent";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchPost,
-  postReset,
-  postUpdateStatus,
-  updatePost,
-} from "./postSlice";
+import { resetPostsStatus, updatePost, postsSelector } from "./postsSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import LoaderComponent from "../shared/LoaderComponent";
+import { fetchPost } from "./postSlice";
 
 function EditPostComponent({ match }) {
-  const { id } = match.params;
-
   const initialState = { title: "", body: "" };
 
   const [post, setPost] = useState(initialState);
 
-  const updateStatus = useSelector(postUpdateStatus);
+  const { status } = useSelector(postsSelector);
 
   const dispatch = useDispatch();
 
@@ -26,6 +20,9 @@ function EditPostComponent({ match }) {
 
   useEffect(() => {
     console.count();
+
+    const { id } = match.params;
+
     const getPost = async (id) => {
       try {
         const result = await dispatch(fetchPost(id));
@@ -38,13 +35,13 @@ function EditPostComponent({ match }) {
     getPost(id);
 
     return () => {
-      dispatch(postReset());
+      dispatch(resetPostsStatus());
     };
-  }, [dispatch, id]);
+  }, [dispatch, match]);
 
   const publishPost = async (event) => {
     event.preventDefault();
-    if (updateStatus === "idle" || updateStatus === "failed") {
+    if (status === "idle" || status === "failed") {
       try {
         const result = await dispatch(updatePost(post));
         unwrapResult(result);
@@ -100,7 +97,7 @@ function EditPostComponent({ match }) {
 
   return (
     <>
-      {updateStatus === "pending" ? <LoaderComponent /> : null}
+      {status === "pending" ? <LoaderComponent /> : null}
       {renderPost()}
     </>
   );
