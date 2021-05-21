@@ -1,6 +1,7 @@
 import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { postSelector } from "../post/postSlice";
 import { addNewComment } from "./commentSlice";
 
 function AddCommentComponent() {
@@ -9,7 +10,7 @@ function AddCommentComponent() {
   const [comment, setComment] = useState(initialState);
   const [commmentStatus, setCommentStatus] = useState("idle");
 
-  const postId = useSelector((state) => state.posts.post.data.id)
+  const { post } = useSelector(postSelector);
 
   const dispatch = useDispatch();
 
@@ -18,7 +19,7 @@ function AddCommentComponent() {
     if (commmentStatus === "idle") {
       setCommentStatus("pending");
       try {
-        comment.postId = postId;
+        comment.postId = post.id;
         const result = await dispatch(addNewComment(comment));
         unwrapResult(result);
       } catch (error) {
