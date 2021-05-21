@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
 import apiClient from "../../services/api";
 
 export const fetchComments = createAsyncThunk(
@@ -35,7 +34,7 @@ export const editComment = createAsyncThunk(
   "comment/editComment",
   async (comment) => {
     try {
-      await axios.put(`/comments/${comment.id}`, comment);
+      await apiClient.put(`/comments/${comment.id}`, comment);
       return comment;
     } catch (error) {
       throw Error(error);
@@ -47,7 +46,7 @@ export const deleteComment = createAsyncThunk(
   "comment/deleteComment",
   async (id) => {
     try {
-      await axios.delete(`/comments/${id}`);
+      await apiClient.delete(`/comments/${id}`);
       return id;
     } catch (error) {
       throw Error(error);
