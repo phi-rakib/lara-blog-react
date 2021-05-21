@@ -23,8 +23,8 @@ function App() {
           <Switch>
             <PrivateRoute exact path="/" component={PostListComponent} />
             <Route path="/posts/:id" component={PostPageComponent} />
-            <Route path="/post/add" component={AddPostComponent} />
-            <Route path="/post/edit/:id" component={EditPostComponent} />
+            <PrivateRoute path="/post/add" component={AddPostComponent} />
+            <PrivateRoute path="/post/edit/:id" component={EditPostComponent} />
             <Route path="/login" component={LoginComponent} />
           </Switch>
         </div>
