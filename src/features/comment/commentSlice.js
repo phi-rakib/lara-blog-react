@@ -57,7 +57,7 @@ export const deleteComment = createAsyncThunk(
 const initialState = {
   comments: [],
   error: null,
-  loading: false,
+  status: 'idle',
 };
 
 const commentSlice = createSlice({
@@ -67,19 +67,19 @@ const commentSlice = createSlice({
     commentReset: (state) => {
       state.comments = [];
       state.error = null;
-      state.loading = false;
+      state.status = 'idle';
     },
   },
   extraReducers: {
     [fetchComments.pending]: (state, action) => {
-      state.loading = true;
+      state.status = 'loading';
     },
     [fetchComments.fulfilled]: (state, action) => {
-      state.loading = false;
+      state.status = 'succeeded';
       state.comments = action.payload;
     },
     [fetchComments.rejected]: (state, action) => {
-      state.loading = false;
+      state.status = 'failed';
       state.error = action.error.message;
       state.comments = [];
     },
@@ -104,9 +104,7 @@ const commentSlice = createSlice({
   },
 });
 
-export const getAllComments = (state) => state.comments.comments;
-
-export const getLoadingStatus = (state) => state.comments.loading;
+export const commentsSelector = (state) => state.comments;
 
 export const { commentReset } = commentSlice.actions;
 
