@@ -5,16 +5,10 @@ import { postSelector } from "../post/postSlice";
 import LoaderComponent from "../shared/LoaderComponent";
 import AddCommentComponent from "./AddCommentComponent";
 import CommentItemComponent from "./CommentItemComponent";
-import {
-  fetchComments,
-  getAllComments,
-  getLoadingStatus,
-  commentReset,
-} from "./commentSlice";
+import { fetchComments, commentReset, commentsSelector } from "./commentSlice";
 
 function CommentListComponent() {
-  const comments = useSelector(getAllComments);
-  const loading = useSelector(getLoadingStatus);
+  const { comments, status } = useSelector(commentsSelector);
   const { post } = useSelector(postSelector);
 
   const dispatch = useDispatch();
@@ -36,14 +30,14 @@ function CommentListComponent() {
     };
   }, [dispatch, post]);
 
-  let content = comments.map((comment) => (
+  const renderComments = comments.map((comment) => (
     <CommentItemComponent comment={comment} key={comment.id} />
   ));
 
   return (
     <div className="ui small comments">
       <h3 className="ui dividing header">Comments</h3>
-      {loading ? <LoaderComponent /> : content}
+      {status === "loading" ? <LoaderComponent /> : renderComments}
       <AddCommentComponent />
     </div>
   );
