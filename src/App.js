@@ -21,7 +21,7 @@ function App() {
       <div className="pusher">
         <div className="ui vertical stripe segment">
           <Switch>
-            <PrivateRoute exact path="/" component={PostListComponent} />
+            <Route exact path="/" component={PostListComponent} />
             <Route path="/posts/:id" component={PostPageComponent} />
             <PrivateRoute path="/post/add" component={AddPostComponent} />
             <PrivateRoute path="/post/edit/:id" component={EditPostComponent} />
