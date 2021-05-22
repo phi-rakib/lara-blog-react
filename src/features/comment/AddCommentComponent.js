@@ -2,13 +2,15 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { postSelector } from "../post/postSlice";
+import MessageComponent from "../shared/MessageComponent";
+import CommentFormComponent from "./CommentFormComponent";
 import { addNewComment } from "./commentSlice";
 
 function AddCommentComponent() {
   const initialState = { body: "" };
-
   const [comment, setComment] = useState(initialState);
-  const [commmentStatus, setCommentStatus] = useState("idle");
+  
+  const [error, setError] = useState("");
 
   const { post } = useSelector(postSelector);
 
@@ -16,18 +18,14 @@ function AddCommentComponent() {
 
   const saveComment = async (event) => {
     event.preventDefault();
-    if (commmentStatus === "idle") {
-      setCommentStatus("pending");
-      try {
-        comment.postId = post.id;
-        const result = await dispatch(addNewComment(comment));
-        unwrapResult(result);
-      } catch (error) {
-        console.error("Failed to add comment ", error);
-      } finally {
-        setCommentStatus("idle");
-        setComment(initialState);
-      }
+    try {
+      comment.postId = post.id;
+      const result = await dispatch(addNewComment(comment));
+      unwrapResult(result);
+      setComment(initialState);
+    } catch (error) {
+      console.error("Failed to add comment ", error);
+      setError(error.message);
     }
   };
 
@@ -36,19 +34,19 @@ function AddCommentComponent() {
     setComment({ ...comment, [name]: value });
   };
 
+  const commentProps = { handleOnChange, handleOnSubmit: saveComment, comment };
+
   return (
-    <form className="ui reply form">
-      <div className="field">
-        <textarea
-          name="body"
-          value={comment.body}
-          onChange={handleOnChange}
-        ></textarea>
-      </div>
-      <div className="ui blue labeled submit icon button" onClick={saveComment}>
-        <i className="icon edit"></i> Add Reply
-      </div>
-    </form>
+    <>
+      {error ? (
+        <MessageComponent
+          title="Unable to Add comments"
+          classes="negative"
+          error={error}
+        />
+      ) : null}
+      {<CommentFormComponent {...commentProps} />}
+    </>
   );
 }
 
